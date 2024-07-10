@@ -9,5 +9,5 @@ interface Props {
 }
 
 export default function SessionProvider({ children }: Props) {
-    return <Provider>{children}</Provider>;
+  return <Provider>{children}</Provider>;
 }

@@ -1,12 +1,14 @@
-'use client';
-import { signOut, useSession } from 'next-auth/react';
+import SessionProvider from './SessionProvider';
+import { getServerSession } from 'next-auth';
+import { authOptions } from '../../pages/api/auth/[...nextauth]';
+import Login from './components/Login';
+import DataFromMyAPI from './components/DataFromMyAPI';
+import { useSession } from 'next-auth/react';
 
-export default function Home() {
-  const session = useSession();
-  return (
-    <>
-      <div>{session.data?.user?.name}</div>
-      <button onClick={() => signOut()}>LogOut</button>
-    </>
-  );
+async function Home() {
+  const session = await getServerSession(authOptions);
+  console.log('session in page', session);
+
+  return <SessionProvider session={session}>{session ? <DataFromMyAPI /> : <Login />}</SessionProvider>;
 }
+export default Home;
