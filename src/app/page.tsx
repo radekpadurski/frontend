@@ -7,8 +7,7 @@ import { useSession } from 'next-auth/react';
 
 async function Home() {
   const session = await getServerSession(authOptions);
-  console.log('session in page', session);
 
-  return <SessionProvider session={session}>{session ? <DataFromMyAPI /> : <Login />}</SessionProvider>;
+  return <SessionProvider session={session}>{<Login />}</SessionProvider>;
 }
 export default Home;
