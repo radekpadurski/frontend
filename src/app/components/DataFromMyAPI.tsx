@@ -8,7 +8,7 @@ import axios from '../axios';
 function DataFromMyAPI() {
   const { data: session, status } = useSession();
   const [token, setToken] = useState('');
-  const [data, setData] = useState(null);
+  const [data, setData] = useState([]);
   console.log('session in data from my api', session);
   useEffect(() => {
     // @ts-ignore
@@ -28,7 +28,7 @@ function DataFromMyAPI() {
               Authorization: 'Bearer ' + token
             }
           });
-          setData(response.data);
+          setData(response.data.results);
         } catch (error) {
           console.error('Error while fetching data', error);
         }
@@ -40,6 +40,12 @@ function DataFromMyAPI() {
   console.log('data from api', data);
   return (
     <div>
+      {data.map((item, index) => (
+        <div key={index}>
+          {/* @ts-ignore */}
+          <p>{item.name}</p>
+        </div>
+      ))}
       <p>data from api</p>
     </div>
   );
