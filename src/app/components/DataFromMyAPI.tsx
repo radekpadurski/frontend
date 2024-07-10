@@ -3,20 +3,21 @@
 import { useEffect, useState } from 'react';
 import { signOut, useSession, signIn } from 'next-auth/react';
 import axios from '../axios';
-// import { auth } from '../../config/firebase-config';
+import Cookies from 'js-cookie';
 
 function DataFromMyAPI() {
   const { data: session, status } = useSession();
   const [token, setToken] = useState('');
   const [data, setData] = useState([]);
-  console.log('session in data from my api', session);
+
   useEffect(() => {
-    // @ts-ignore
-    if (status === 'authenticated' && session.token.token.account.id_token)
-      // @ts-ignore
-      setToken(session.token.token.account.id_token);
-    // @ts-ignore
-  }, [session.token.token.account.id_token, status]);
+    if (status === 'authenticated') {
+      const value = Cookies.get('next-auth.session-idToken');
+      if (value) {
+        setToken(value);
+      }
+    }
+  }, [status]);
 
   useEffect(() => {
     if (token) {
