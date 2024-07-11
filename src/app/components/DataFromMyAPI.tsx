@@ -6,6 +6,12 @@ import axios from '../axios';
 import Cookies from 'js-cookie';
 import Modal from './Modal';
 import ScatterChart from './Chart';
+import Button from './Button';
+import Table from './Table/Table';
+import TableRow from './Table/TableRow';
+import TableCell from './Table/TableCell';
+import TableWrapper from './Table/TableWrapper';
+import { styled } from 'styled-components';
 
 interface Results {
   v: number;
@@ -28,10 +34,19 @@ interface TickerDetails {
   count: number;
 }
 
+interface TickerList {
+  name: string;
+  active: boolean;
+  currency_name: string;
+  locale: string;
+  market: string;
+  ticker: string;
+}
+
 function DataFromMyAPI() {
   const { data: session, status } = useSession();
   const [token, setToken] = useState('');
-  const [data, setData] = useState([]);
+  const [data, setData] = useState<TickerList[]>([]);
   const [alarms, setAlarms] = useState([]);
   const [modalOpen, setModalOpen] = useState<boolean>(false);
   const [modalContent, setModalContent] = useState<TickerDetails>();
@@ -57,7 +72,6 @@ function DataFromMyAPI() {
 
   useEffect(() => {
     if (token) {
-      console.log('token', token);
       const fetchData = async () => {
         try {
           const response = await axios.get('/api/getTickersList', {
@@ -65,6 +79,7 @@ function DataFromMyAPI() {
               Authorization: 'Bearer ' + token
             }
           });
+          console.log(response);
           setData(response.data.results);
         } catch (error) {
           console.error('Error while fetching data', error);
@@ -77,7 +92,6 @@ function DataFromMyAPI() {
 
   useEffect(() => {
     if (token) {
-      console.log('token', token);
       const fetchData = async () => {
         try {
           const response = await axios.get('/alarms', {
@@ -106,7 +120,6 @@ function DataFromMyAPI() {
           });
           setModalContent(response.data);
           openModal();
-          console.log(response.data.results);
         } catch (error) {
           console.error('Error while fetching data', error);
         }
@@ -125,7 +138,6 @@ function DataFromMyAPI() {
               Authorization: 'Bearer ' + token
             }
           });
-          console.log(response.data.results);
         } catch (error) {
           console.error('Error while fetching data', error);
         }
@@ -135,25 +147,45 @@ function DataFromMyAPI() {
     }
   };
 
-  console.log('data from api', data);
+  const Wrapper = styled.div`
+    background-color: #1f2739;
+  `;
+
   return (
-    <div>
+    <Wrapper>
+      <TableWrapper>
+        <Table
+          headersText={['Name', 'IsActive', 'Currency', 'Locale', 'Type', 'Exchange symbol']}
+          flexSize={[58, 8, 8, 8, 8, 10]}
+        >
+          {data.map((item, index) => (
+            <TableRow key={index} index={index} onClick={() => handleGetTickerDetail(item.ticker)}>
+              <TableCell text={item.name} flex="1 0 58%" />
+              <TableCell text={'' + item.active} flex="1 0 8%" />
+              <TableCell text={item.currency_name} flex="1 0 8%" />
+              <TableCell text={item.locale} flex="1 0 8%" />
+              <TableCell text={item.market} flex="1 0 8%" />
+              <TableCell text={item.ticker} flex="1 0 10%" />
+            </TableRow>
+          ))}
+        </Table>
+      </TableWrapper>
       {data.map((item, index) => (
         <div key={index}>
           {/* @ts-ignore */}
-          <button onClick={() => handleGetTickerDetail(item.ticker)}>{item.name}</button>
-          <Modal isOpen={modalOpen} onClose={closeModal}>
-            <ScatterChart
-              dataContent={modalContent?.results.map((result) => ({
-                x: new Date(result.t).getDate(),
-                y: result.o
-              }))}
-            />
-            <input value={modalInputValue} onChange={(event) => setModalInputValue(event.target.value)} type="number" />
-            <button onClick={() => handleSetAlarm()}>set alarm</button>
-          </Modal>
+          {/* <Button onClick={() => handleGetTickerDetail(item.ticker)}>{item.name}</Button> */}
         </div>
       ))}
+      <Modal isOpen={modalOpen} onClose={closeModal}>
+        <ScatterChart
+          dataContent={modalContent?.results.map((result) => ({
+            x: new Date(result.t).getDate(),
+            y: result.o
+          }))}
+        />
+        <input value={modalInputValue} onChange={(event) => setModalInputValue(event.target.value)} type="number" />
+        <Button onClick={() => handleSetAlarm()}>set alarm</Button>
+      </Modal>
       {alarms.map((item, index) => (
         <div key={index}>
           {/* @ts-ignore */}
@@ -162,7 +194,7 @@ function DataFromMyAPI() {
           <p>{item.targetPrice}</p>
         </div>
       ))}
-    </div>
+    </Wrapper>
   );
 }
 
