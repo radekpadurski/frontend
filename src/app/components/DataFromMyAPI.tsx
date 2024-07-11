@@ -32,14 +32,17 @@ function DataFromMyAPI() {
   const { data: session, status } = useSession();
   const [token, setToken] = useState('');
   const [data, setData] = useState([]);
+  const [alarms, setAlarms] = useState([]);
   const [modalOpen, setModalOpen] = useState<boolean>(false);
   const [modalContent, setModalContent] = useState<TickerDetails>();
+  const [modalInputValue, setModalInputValue] = useState<string>();
 
   const openModal = () => {
     setModalOpen(true);
   };
 
   const closeModal = () => {
+    setModalInputValue(undefined);
     setModalOpen(false);
   };
 
@@ -72,6 +75,26 @@ function DataFromMyAPI() {
     }
   }, [token]);
 
+  useEffect(() => {
+    if (token) {
+      console.log('token', token);
+      const fetchData = async () => {
+        try {
+          const response = await axios.get('/alarms', {
+            headers: {
+              Authorization: 'Bearer ' + token
+            }
+          });
+          setAlarms(response.data);
+        } catch (error) {
+          console.error('Error while fetching data', error);
+        }
+      };
+
+      fetchData();
+    }
+  }, [token]);
+
   const handleGetTickerDetail = (indicesTicker: string) => {
     if (token && indicesTicker) {
       const fetchData = async () => {
@@ -83,6 +106,25 @@ function DataFromMyAPI() {
           });
           setModalContent(response.data);
           openModal();
+          console.log(response.data.results);
+        } catch (error) {
+          console.error('Error while fetching data', error);
+        }
+      };
+
+      fetchData();
+    }
+  };
+
+  const handleSetAlarm = () => {
+    if (modalInputValue && modalContent) {
+      const fetchData = async () => {
+        try {
+          const response = await axios.get(`/set-alarm/symbol/${modalContent.ticker}/targetPrice/${modalInputValue}`, {
+            headers: {
+              Authorization: 'Bearer ' + token
+            }
+          });
           console.log(response.data.results);
         } catch (error) {
           console.error('Error while fetching data', error);
@@ -107,8 +149,17 @@ function DataFromMyAPI() {
                 y: result.o
               }))}
             />
-            <>{modalContent?.results.map((result) => result.c)}</>
+            <input value={modalInputValue} onChange={(event) => setModalInputValue(event.target.value)} type="number" />
+            <button onClick={() => handleSetAlarm()}>set alarm</button>
           </Modal>
+        </div>
+      ))}
+      {alarms.map((item, index) => (
+        <div key={index}>
+          {/* @ts-ignore */}
+          <p>{item.symbol}</p>
+          {/* @ts-ignore */}
+          <p>{item.targetPrice}</p>
         </div>
       ))}
     </div>
