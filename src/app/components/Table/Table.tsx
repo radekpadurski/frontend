@@ -3,7 +3,7 @@ import styled from 'styled-components';
 
 interface Props {
   headersText: string[];
-  flexSize: number[];
+  flexsize: number[];
   children: React.ReactNode;
 }
 
@@ -32,18 +32,17 @@ const RowsWrapper = styled.div`
   display: flex;
   flex-direction: column;
   z-index: 0;
-
   overflow-y: overlay;
   overflow-x: hidden;
 `;
 
 type TypographyWrapperProps = {
-  flexSize: number;
+  flexsize: number;
 };
 
 const TypographyWrapper = styled.div<TypographyWrapperProps>`
   display: flex;
-  ${({ flexSize }) => flexSize && `flex: 1 0 ${flexSize}%`};
+  ${({ flexsize }) => flexsize && `flex: 1 0 ${flexsize}%`};
 `;
 
 const Typography = styled.p`
@@ -51,11 +50,11 @@ const Typography = styled.p`
   color: #4dc3fa;
 `;
 
-const Table: React.FC<Props> = ({ headersText, flexSize, children }) => (
+const Table: React.FC<Props> = ({ headersText, flexsize, children }) => (
   <ComponentWrapper>
     <HeaderWrapper>
       {headersText.map((header, index) => (
-        <TypographyWrapper key={`TypographyWrapper-${index}`} flexSize={flexSize[index]}>
+        <TypographyWrapper key={`TypographyWrapper-${index}`} flexsize={flexsize[index]}>
           <Typography key={index}>{header}</Typography>
         </TypographyWrapper>
       ))}

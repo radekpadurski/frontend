@@ -10,13 +10,10 @@ export const authOptions = {
   ],
   callbacks: {
     async jwt(token, user, account, profile, isNewUser) {
-      // if (account?.accessToken) {
-      //   token.accessToken = account.accessToken;
-      // }
       return token;
     },
     async session(session, token) {
-      // session.accessToken = token.accessToken;
+      session.accessToken = token;
       return session;
     }
   }

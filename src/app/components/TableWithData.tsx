@@ -4,15 +4,13 @@ import { useEffect, useState } from 'react';
 import { useSession } from 'next-auth/react';
 import axios from '../axios';
 import Cookies from 'js-cookie';
-import Modal from './Modal';
 import Table from './Table/Table';
 import TableRow from './Table/TableRow';
 import TableCell from './Table/TableCell';
 import TableWrapper from './Table/TableWrapper';
 import { styled } from 'styled-components';
-import { RootState } from '../../../store';
 import { useDispatch } from 'react-redux';
-import { closeModal, openModal, TickerDetails } from '../../../store/modalSlice';
+import { openModal, TickerDetails } from '../../../store/modalSlice';
 
 interface TickerList {
   name: string;
@@ -24,10 +22,11 @@ interface TickerList {
 }
 
 const Wrapper = styled.div`
-  background-color: #1f2739;
+  display: flex;
+  flex: 1 0 70%;
 `;
 
-function DataFromMyAPI() {
+function TableWithData() {
   const { data: session, status } = useSession();
   const [token, setToken] = useState('');
   const [data, setData] = useState<TickerList[]>([]);
@@ -94,8 +93,6 @@ function DataFromMyAPI() {
               Authorization: 'Bearer ' + token
             }
           });
-          console.log(response.data);
-
           handleOpenModal(response.data);
         } catch (error) {
           console.error('Error while fetching data', error);
@@ -111,7 +108,7 @@ function DataFromMyAPI() {
       <TableWrapper>
         <Table
           headersText={['Name', 'IsActive', 'Currency', 'Locale', 'Type', 'Exchange symbol']}
-          flexSize={[58, 8, 8, 8, 8, 10]}
+          flexsize={[58, 8, 8, 8, 8, 10]}
         >
           {data.map((item, index) => (
             <TableRow key={index} index={index} onClick={() => handleGetTickerDetail(item.ticker)}>
@@ -125,17 +122,8 @@ function DataFromMyAPI() {
           ))}
         </Table>
       </TableWrapper>
-      <Modal />
-      {alarms.map((item, index) => (
-        <div key={index}>
-          {/* @ts-ignore */}
-          <p>{item.symbol}</p>
-          {/* @ts-ignore */}
-          <p>{item.targetPrice}</p>
-        </div>
-      ))}
     </Wrapper>
   );
 }
 
-export default DataFromMyAPI;
+export default TableWithData;
