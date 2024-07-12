@@ -41,8 +41,7 @@ const RightColumnWrapper = styled.div`
   flex-direction: column;
   height: 100%;
 `;
-
-function MainPage() {
+const MainPage: React.FC = () => {
   const { data: session, status } = useSession();
 
   if (session) {
@@ -84,5 +83,5 @@ function MainPage() {
       <Modal />
     </Provider>
   );
-}
+};
 export default MainPage;

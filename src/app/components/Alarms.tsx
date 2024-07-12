@@ -13,8 +13,7 @@ import { styled } from 'styled-components';
 const Wrapper = styled.div`
   display: flex;
 `;
-
-function Alarms() {
+const Alarms: React.FC = () => {
   const { data: session, status } = useSession();
   const [token, setToken] = useState('');
   const [alarms, setAlarms] = useState([]);
@@ -63,6 +62,6 @@ function Alarms() {
       </TableWrapper>
     </Wrapper>
   );
-}
+};
 
 export default Alarms;

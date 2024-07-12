@@ -10,7 +10,7 @@ const Wrapper = styled.div`
   align-self: end;
 `;
 
-function ActiveUser() {
+const ActiveUser: React.FC = () => {
   const { data: session } = useSession();
 
   const handleSignOut = () => {
@@ -25,6 +25,6 @@ function ActiveUser() {
       </Wrapper>
     );
   }
-}
+};
 
 export default ActiveUser;

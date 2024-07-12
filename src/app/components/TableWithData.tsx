@@ -25,8 +25,7 @@ const Wrapper = styled.div`
   display: flex;
   flex: 1 0 70%;
 `;
-
-function TableWithData() {
+const TableWithData: React.FC = () => {
   const { data: session, status } = useSession();
   const [token, setToken] = useState('');
   const [data, setData] = useState<TickerList[]>([]);
@@ -124,6 +123,6 @@ function TableWithData() {
       </TableWrapper>
     </Wrapper>
   );
-}
+};
 
 export default TableWithData;
