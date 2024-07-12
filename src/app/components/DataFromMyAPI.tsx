@@ -5,34 +5,14 @@ import { useSession } from 'next-auth/react';
 import axios from '../axios';
 import Cookies from 'js-cookie';
 import Modal from './Modal';
-import ScatterChart from './Chart';
-import Button from './Button';
 import Table from './Table/Table';
 import TableRow from './Table/TableRow';
 import TableCell from './Table/TableCell';
 import TableWrapper from './Table/TableWrapper';
 import { styled } from 'styled-components';
-
-interface Results {
-  v: number;
-  vw: number;
-  o: number;
-  c: number;
-  h: number;
-  l: number;
-  t: number;
-  n: number;
-}
-interface TickerDetails {
-  ticker: string;
-  queryCount: number;
-  resultsCount: number;
-  adjusted: boolean;
-  results: Results[];
-  status: string;
-  request_id: string;
-  count: number;
-}
+import { RootState } from '../../../store';
+import { useDispatch } from 'react-redux';
+import { closeModal, openModal, TickerDetails } from '../../../store/modalSlice';
 
 interface TickerList {
   name: string;
@@ -43,22 +23,19 @@ interface TickerList {
   ticker: string;
 }
 
+const Wrapper = styled.div`
+  background-color: #1f2739;
+`;
+
 function DataFromMyAPI() {
   const { data: session, status } = useSession();
   const [token, setToken] = useState('');
   const [data, setData] = useState<TickerList[]>([]);
   const [alarms, setAlarms] = useState([]);
-  const [modalOpen, setModalOpen] = useState<boolean>(false);
-  const [modalContent, setModalContent] = useState<TickerDetails>();
-  const [modalInputValue, setModalInputValue] = useState<string>();
+  const dispatch = useDispatch();
 
-  const openModal = () => {
-    setModalOpen(true);
-  };
-
-  const closeModal = () => {
-    setModalInputValue(undefined);
-    setModalOpen(false);
+  const handleOpenModal = (modalContent: TickerDetails) => {
+    dispatch(openModal(modalContent));
   };
 
   useEffect(() => {
@@ -79,7 +56,6 @@ function DataFromMyAPI() {
               Authorization: 'Bearer ' + token
             }
           });
-          console.log(response);
           setData(response.data.results);
         } catch (error) {
           console.error('Error while fetching data', error);
@@ -118,8 +94,9 @@ function DataFromMyAPI() {
               Authorization: 'Bearer ' + token
             }
           });
-          setModalContent(response.data);
-          openModal();
+          console.log(response.data);
+
+          handleOpenModal(response.data);
         } catch (error) {
           console.error('Error while fetching data', error);
         }
@@ -128,28 +105,6 @@ function DataFromMyAPI() {
       fetchData();
     }
   };
-
-  const handleSetAlarm = () => {
-    if (modalInputValue && modalContent) {
-      const fetchData = async () => {
-        try {
-          const response = await axios.get(`/set-alarm/symbol/${modalContent.ticker}/targetPrice/${modalInputValue}`, {
-            headers: {
-              Authorization: 'Bearer ' + token
-            }
-          });
-        } catch (error) {
-          console.error('Error while fetching data', error);
-        }
-      };
-
-      fetchData();
-    }
-  };
-
-  const Wrapper = styled.div`
-    background-color: #1f2739;
-  `;
 
   return (
     <Wrapper>
@@ -170,22 +125,7 @@ function DataFromMyAPI() {
           ))}
         </Table>
       </TableWrapper>
-      {data.map((item, index) => (
-        <div key={index}>
-          {/* @ts-ignore */}
-          {/* <Button onClick={() => handleGetTickerDetail(item.ticker)}>{item.name}</Button> */}
-        </div>
-      ))}
-      <Modal isOpen={modalOpen} onClose={closeModal}>
-        <ScatterChart
-          dataContent={modalContent?.results.map((result) => ({
-            x: new Date(result.t).getDate(),
-            y: result.o
-          }))}
-        />
-        <input value={modalInputValue} onChange={(event) => setModalInputValue(event.target.value)} type="number" />
-        <Button onClick={() => handleSetAlarm()}>set alarm</Button>
-      </Modal>
+      <Modal />
       {alarms.map((item, index) => (
         <div key={index}>
           {/* @ts-ignore */}

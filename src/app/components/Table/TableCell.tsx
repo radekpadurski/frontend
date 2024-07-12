@@ -1,5 +1,6 @@
 import React from 'react';
 import styled from 'styled-components';
+import Typography from '../Typography';
 
 export interface Props {
   text: string;
@@ -11,11 +12,6 @@ const TableCellWrapper = styled.div<Pick<Props, 'flex'>>`
   flex-direction: column;
   min-width: 0;
   ${({ flex }) => flex && `flex: ${flex}`};
-`;
-
-const Typography = styled.span`
-  whitespace: nowrap;
-  color: white;
 `;
 
 const TableCell: React.FC<Props> = ({ text, flex }) => (

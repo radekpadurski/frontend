@@ -28,7 +28,7 @@ const HeaderWrapper = styled.div`
 `;
 
 const RowsWrapper = styled.div`
-  row-gap: 0.5rem;
+  row-gap: 8px;
   display: flex;
   flex-direction: column;
   z-index: 0;
@@ -48,7 +48,7 @@ const TypographyWrapper = styled.div<TypographyWrapperProps>`
 
 const Typography = styled.p`
   whitespace: nowrap;
-  color: white;
+  color: #4dc3fa;
 `;
 
 const Table: React.FC<Props> = ({ headersText, flexSize, children }) => (

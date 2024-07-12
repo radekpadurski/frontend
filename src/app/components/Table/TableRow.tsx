@@ -18,7 +18,7 @@ export const TableRowWrapper = styled.div<TableRowWrapperProps>`
 
   ${({ index }) => (index % 2 == 0 ? 'background-color: #323C50' : 'background-color: #2C3446')};
   border: 1px solid black;
-  border-radius: 0.25rem;
+  border-radius: 4px;
   display: flex;
   flex-direction: row;
   cursor: pointer;
@@ -29,13 +29,13 @@ export const TableRowWrapper = styled.div<TableRowWrapperProps>`
 `;
 
 const ContentWrapper = styled.div<Partial<Props>>`
-  height: 3.375rem;
+  height: 54px;
   display: flex;
   flex-direction: row;
   justify-content: space-between;
   flex: 1 1 100%;
   align-items: center;
-  margin: 0 1rem;
+  margin: 0 16px;
 `;
 
 const TableRow: React.FC<Props> = ({ children, onClick, id, index }) => (

@@ -4,8 +4,8 @@ import { Chart as ChartJS, CategoryScale, LinearScale, PointElement, Title, Tool
 ChartJS.register(CategoryScale, LinearScale, PointElement, Title, Tooltip, Legend);
 
 interface Data {
-  x: Number;
-  y: Number;
+  x: number;
+  y: number;
 }
 
 interface Props {
