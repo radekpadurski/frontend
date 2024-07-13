@@ -96,6 +96,12 @@ const Modal: React.FC = () => {
     }
   };
 
+  function timestampToHour(timestamp: number): number {
+    const date = new Date(timestamp);
+    const hour = date.getHours();
+    return hour;
+  }
+
   if (!isModalOpen) return null;
   return (
     <ModalOverlay>
@@ -103,7 +109,7 @@ const Modal: React.FC = () => {
         <ContentWrapper>
           <ScatterChart
             dataContent={modalContent?.results.map((result) => ({
-              x: new Date(result.t).getDate(),
+              x: timestampToHour(result.t),
               y: result.o
             }))}
           />

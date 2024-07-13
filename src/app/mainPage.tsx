@@ -48,9 +48,9 @@ const MainPage: React.FC = () => {
     const value = Cookies.get('next-auth.session-idToken');
     if (!value) {
       // @ts-ignore
-      if (session.token.token.account.id_token) {
-        // @ts-ignore
-        Cookies.set('next-auth.session-idToken', session.token.token.account.id_token, { expires: 7 });
+      const sessionToken = session.token.token.account.id_token;
+      if (sessionToken) {
+        Cookies.set('next-auth.session-idToken', sessionToken, { expires: 7 });
       }
     }
   }

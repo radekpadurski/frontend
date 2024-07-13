@@ -10,13 +10,19 @@ import TableCell from './Table/TableCell';
 import TableWrapper from './Table/TableWrapper';
 import { styled } from 'styled-components';
 
+interface Alarm {
+  symbol: string;
+  targetPrice: number;
+}
+
 const Wrapper = styled.div`
   display: flex;
 `;
+
 const Alarms: React.FC = () => {
   const { data: session, status } = useSession();
   const [token, setToken] = useState('');
-  const [alarms, setAlarms] = useState([]);
+  const [alarms, setAlarms] = useState<Alarm[]>([]);
 
   useEffect(() => {
     if (status === 'authenticated') {
@@ -52,9 +58,7 @@ const Alarms: React.FC = () => {
         <Table headersText={['Symbol', 'Price']} flexsize={[50, 50]}>
           {alarms.map((item, index) => (
             <TableRow key={index} index={index}>
-              {/* @ts-ignore */}
               <TableCell text={item.symbol} flex="1 0 50%" />
-              {/* @ts-ignore */}
               <TableCell text={'' + item.targetPrice} flex="1 0 50%" />
             </TableRow>
           ))}

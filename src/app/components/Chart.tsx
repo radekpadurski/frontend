@@ -1,7 +1,7 @@
 import { Scatter } from 'react-chartjs-2';
-import { Chart as ChartJS, CategoryScale, LinearScale, PointElement, Title, Tooltip, Legend } from 'chart.js';
+import { Chart as ChartJS, CategoryScale, LinearScale, PointElement, Tooltip } from 'chart.js';
 
-ChartJS.register(CategoryScale, LinearScale, PointElement, Title, Tooltip, Legend);
+ChartJS.register(CategoryScale, LinearScale, PointElement, Tooltip);
 
 interface Data {
   x: number;
@@ -16,7 +16,6 @@ const ScatterChart: React.FC<Props> = ({ dataContent }) => {
   const data = {
     datasets: [
       {
-        label: 'Scatter Dataset',
         data: dataContent,
         backgroundColor: 'rgba(75, 192, 192, 0.6)'
       }
@@ -25,12 +24,7 @@ const ScatterChart: React.FC<Props> = ({ dataContent }) => {
 
   const options = {
     responsive: true,
-    plugins: {
-      title: {
-        display: true,
-        text: 'Scatter Plot Example'
-      }
-    }
+    plugins: {}
   };
 
   return <Scatter data={data} options={options} />;
